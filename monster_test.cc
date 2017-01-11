@@ -37,9 +37,30 @@ void testMummyConstructor() {
     checkEqual(mummy2.getAttackPower(), 42.0, "Attack power set correctly.");
 }
 
+void testGroupOfMonstersConstructor() {
+    beginTest();
+
+    GroupOfMonsters group1{std::make_shared<Mummy>(23.0, 11.0),
+                          std::make_shared<Vampire>(11.0, 17.0),
+                          std::make_shared<Zombie>(8.0, 14.0)};
+
+    checkEqual(group1.getHealth(), 42.0, "Collective health set correctly.");
+    checkEqual(group1.getAttackPower(), 42.0,
+            "Collective attack power set correctly.");
+
+    GroupOfMonsters group2{std::make_shared<Mummy>(20.0, 1.0),
+                           std::make_shared<Zombie>(15.0, 2.0),
+                           std::make_shared<Vampire>(10.0, 4.0),
+                           std::make_shared<Zombie>(5.0, 8.0)};
+
+    checkEqual(group2.getHealth(), 50.0, "Collective health set correctly.");
+    checkEqual(group2.getAttackPower(), 15.0,
+            "Collective attack power set correctly.");
+}
 
 int main() {
     testZombieConstructor();
     testVampireConstructor();
     testMummyConstructor();
+    testGroupOfMonstersConstructor();
 }
