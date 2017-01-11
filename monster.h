@@ -8,29 +8,45 @@
 
 class Monster : public Character, public Attacker {
 protected:
-    Monster(HealthPoints health, AttackPower power) : Character(health), Attacker(power) {}
+    Monster(HealthPoints health, AttackPower power) : 
+        Character(health), Attacker(power) {}
+
+public:
+    virtual std::string getName() const = 0;
 };
 
 class Mummy : public Monster {
 public:
     Mummy(HealthPoints health, AttackPower power) : Monster(health, power) {}
+
+    std::string getName() const {
+        return "Mummy";
+    }
 };
 
 class Vampire : public Monster {
 public:
     Vampire(HealthPoints health, AttackPower power) : Monster(health, power) {}
+
+    std::string getName() const {
+        return "Vampire";
+    }
 };
 
 class Zombie : public Monster {
 public:
     Zombie(HealthPoints health, AttackPower power) : Monster(health, power) {}
+
+    std::string getName() const {
+        return "Zombie";
+    }
 };
 
 
 class GroupOfMonsters : public Monster {
 private:
     std::vector<std::shared_ptr<Monster>> monsters_;
-    
+
     static HealthPoints addUpHealth(
             std::vector<std::shared_ptr<Monster>> const &monsters) {
         HealthPoints sum = 0;
@@ -66,13 +82,18 @@ private:
         }
         return sum;
     }
+
 public:
     GroupOfMonsters(std::vector<std::shared_ptr<Monster>> monsters)
         : Monster(addUpHealth(monsters), addUpPower(monsters)), monsters_(monsters) {}
 
     GroupOfMonsters(std::initializer_list<std::shared_ptr<Monster>> monsters)
         : Monster(addUpHealth(monsters), addUpPower(monsters)), monsters_(monsters) {}
-    
+
+    std::string getName() const {
+        return "GroupOfMonsters";
+    }
+
     void takeDamage(AttackPower damage) {
         AttackPower powerSum = 0;
         HealthPoints healthSum = 0;
@@ -100,7 +121,8 @@ std::shared_ptr<Zombie> createZombie(HealthPoints health, AttackPower power) {
     return std::make_shared<Zombie>(health, power);
 }
 
-std::shared_ptr<GroupOfMonsters> createGroupOfMonsters(std::vector<std::shared_ptr<Monster>> monsters) {
+std::shared_ptr<GroupOfMonsters> createGroupOfMonsters(
+        std::vector<std::shared_ptr<Monster>> monsters) {
     return std::make_shared<GroupOfMonsters>(monsters);
 }
 

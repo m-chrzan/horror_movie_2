@@ -18,7 +18,7 @@ public:
 
     virtual ~Character() = 0;
 
-    HealthPoints getHealth() {
+    virtual HealthPoints getHealth() const {
         return health_;
     }
 
@@ -41,7 +41,8 @@ public:
     Attacker(AttackPower power) : power_(power) {}
 
     virtual ~Attacker() = 0;
-    AttackPower getAttackPower() {
+
+    AttackPower getAttackPower() const {
         return power_;
     }
 };

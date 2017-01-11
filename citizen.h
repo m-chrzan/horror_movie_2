@@ -1,6 +1,7 @@
 #ifndef CITIZEN_H
 #define CITIZEN_H
 
+#include <memory>
 #include <cassert>
 #include "helper.h"
 
@@ -13,7 +14,7 @@ public:
 
     virtual ~Citizen() = 0;
 
-    Age getAge() {
+    Age getAge() const {
         return age_;
     }
 };
@@ -41,5 +42,18 @@ public:
     Sheriff(HealthPoints health, Age age, AttackPower power) :
             Adult(health, age), Attacker(power) {}
 };
+
+std::shared_ptr<Teenager> createTeenager(HealthPoints health, Age age) {
+    return std::make_shared<Teenager>(health, age);
+}
+
+std::shared_ptr<Adult> createAdult(HealthPoints health, Age age) {
+    return std::make_shared<Adult>(health, age);
+}
+
+std::shared_ptr<Sheriff> createSheriff(HealthPoints health, Age age, 
+                                       AttackPower power) {
+    return std::make_shared<Sheriff>(health, age, power);
+}
 
 #endif
