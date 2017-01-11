@@ -1,6 +1,7 @@
 #ifndef CITIZEN_H
 #define CITIZEN_H
 
+#include <cassert>
 #include "helper.h"
 
 class Citizen : public Character {
@@ -15,9 +16,9 @@ public:
 	}
 };
 
-class Teen : public Citizen {
+class Teenager : public Citizen {
 public:
-	Teen(HealthPoints hp, Age age) : Citizen(hp, age) {
+	Teenager(HealthPoints hp, Age age) : Citizen(hp, age) {
 		assert(age <= 17);
 		assert(age >= 11);
 	}

@@ -1,6 +1,8 @@
 #ifndef HELPER_H
 #define HELPER_H
 
+#include <algorithm>
+
 using HealthPoints = double;
 using Age = double;
 using AttackPower = double;
