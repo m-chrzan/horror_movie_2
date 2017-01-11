@@ -1,38 +1,40 @@
 #ifndef HELPER_H
 #define HELPER_H
 
+#include <cassert>
+#include <algorithm>
+
 using HealthPoints = double;
 using Age = double;
 using AttackPower = double;
 
 class Character {
 protected:
-	HealthPoints hp;
+	HealthPoints health_;
 	
-	Character(HealthPoints hp) : hp(hp) {
-		assert(hp > 0);
+	Character(HealthPoints health) : health_(health) {
+		assert(health > 0);
 	}
 	
 public:
 	HealthPoints getHealth() {
-		return hp;
+		return health_;
 	}
 	
 	virtual void takeDamage(AttackPower damage) {
-		hp = max(hp - damage, 0.0);
+		health_ -= std::min(health_, damage);
 	}
 };
 
 class Attacker {
-private:
-	AttackPower ap;
 	
 protected:
-	Attacker(AttackPower ap) : ap(ap) {}
+	AttackPower power_;
+	Attacker(AttackPower power) : power_(power) {}
 	
 public:
 	AttackPower getAttackPower() {
-		return ap;
+		return power_;
 	}
 };
 
