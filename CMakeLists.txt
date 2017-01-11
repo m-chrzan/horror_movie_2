@@ -6,3 +6,5 @@ set(CMAKE_CXX_FLAGS "-std=c++14 -Wall -g")
 set(SOURCE_FILES
     testing.h
     citizen.h)
+
+add_executable(citizen_test citizen_test.cc ${SOURCE_FILES})
