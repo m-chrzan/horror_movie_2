@@ -12,10 +12,6 @@ class Character {
 private:
 	HealthPoints health_;
 
-	Character(HealthPoints health) : health_(health) {
-		assert(health > 0);
-	}
-
 public:
 	Character(HealthPoints health) : health_(health) {
 		assert(health_ > 0);
