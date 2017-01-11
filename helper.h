@@ -1,6 +1,7 @@
 #ifndef HELPER_H
 #define HELPER_H
 
+#include <cassert>
 #include <algorithm>
 
 using HealthPoints = double;
@@ -10,6 +11,10 @@ using AttackPower = double;
 class Character {
 private:
 	HealthPoints health_;
+
+	Character(HealthPoints health) : health_(health) {
+		assert(health > 0);
+	}
 
 public:
 	Character(HealthPoints health) : health_(health) {
