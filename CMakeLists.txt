@@ -9,3 +9,4 @@ set(SOURCE_FILES
 
 add_executable(citizen_test citizen_test.cc ${SOURCE_FILES})
 add_executable(monster_test monster_test.cc ${SOURCE_FILES})
+add_executable(smalltown_test smalltown_test.cc ${SOURCE_FILES})
