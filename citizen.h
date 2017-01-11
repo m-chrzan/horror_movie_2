@@ -7,9 +7,7 @@ class Citizen : public Character {
 protected:
 	Age age;
 	
-	Citizen(HealthPoints hp, Age age) : Character(hp), age(age) {
-		assert(age > 0);
-	}
+	Citizen(HealthPoints hp, Age age) : Character(hp), age(age) {}
 	
 public:
 	Age getAge() {
@@ -20,14 +18,16 @@ public:
 class Teen : public Citizen {
 public:
 	Teen(HealthPoints hp, Age age) : Citizen(hp, age) {
-		assert(age < 17);
+		assert(age <= 17);
+		assert(age >= 11);
 	}
 };
 
 class Adult : public Citizen {
 public:
 	Adult(HealthPoints hp, Age age) : Citizen(hp, age) {
-		assert(age > 18);
+		assert(age >= 18);
+		assert(age <= 100);
 	}
 };
 
