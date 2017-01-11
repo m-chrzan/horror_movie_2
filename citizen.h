@@ -5,20 +5,24 @@
 #include "helper.h"
 
 class Citizen : public Character {
-protected:
-	Age age;
-	
-	Citizen(HealthPoints hp, Age age) : Character(hp), age(age) {}
-	
+private:
+	Age age_;
+
 public:
+	Citizen(HealthPoints health, Age age) : Character(health), age_(age) {}
+
+    virtual ~Citizen() = 0;
+
 	Age getAge() {
-		return age;
+		return age_;
 	}
 };
 
+inline Citizen::~Citizen() {}
+
 class Teenager : public Citizen {
 public:
-	Teenager(HealthPoints hp, Age age) : Citizen(hp, age) {
+	Teenager(HealthPoints health, Age age) : Citizen(health, age) {
 		assert(age <= 17);
 		assert(age >= 11);
 	}
@@ -26,7 +30,7 @@ public:
 
 class Adult : public Citizen {
 public:
-	Adult(HealthPoints hp, Age age) : Citizen(hp, age) {
+	Adult(HealthPoints health, Age age) : Citizen(health, age) {
 		assert(age >= 18);
 		assert(age <= 100);
 	}
@@ -34,7 +38,8 @@ public:
 
 class Sheriff : public Adult, public Attacker {
 public:
-	Sheriff(HealthPoints hp, Age age, AttackPower ap) : Adult(hp, age), Attacker(ap) {}
+	Sheriff(HealthPoints health, Age age, AttackPower power) :
+            Adult(health, age), Attacker(power) {}
 };
 
 #endif

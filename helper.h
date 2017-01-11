@@ -8,34 +8,44 @@ using Age = double;
 using AttackPower = double;
 
 class Character {
-protected:
-	HealthPoints hp;
-	
-	Character(HealthPoints hp) : hp(hp) {
-		assert(hp > 0);
-	}
-	
+private:
+	HealthPoints health_;
+
 public:
-	HealthPoints getHealth() {
-		return hp;
+	Character(HealthPoints health) : health_(health) {
+		assert(health_ > 0);
 	}
-	
+
+    virtual ~Character() = 0;
+
+	HealthPoints getHealth() {
+		return health_;
+	}
+
 	virtual void takeDamage(AttackPower damage) {
-		hp = max(hp - damage, 0.0);
+        if (damage > health_) {
+            health_ = 0;
+        } else {
+            health_ -= damage;
+        }
 	}
 };
 
+inline Character::~Character() {}
+
 class Attacker {
 private:
-	AttackPower ap;
-	
-protected:
-	Attacker(AttackPower ap) : ap(ap) {}
-	
+	AttackPower power_;
+
 public:
+	Attacker(AttackPower power) : power_(power) {}
+
+    virtual ~Attacker() = 0;
 	AttackPower getAttackPower() {
-		return ap;
+		return power_;
 	}
 };
+
+inline Attacker::~Attacker() {}
 
 #endif
