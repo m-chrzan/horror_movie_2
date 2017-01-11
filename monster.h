@@ -1,6 +1,7 @@
 #ifndef MONSTER_H
 #define MONSTER_H
 
+#include <initializer_list>
 #include <memory>
 #include <vector>
 #include "helper.h"
@@ -25,28 +26,51 @@ public:
     Zombie(HealthPoints health, AttackPower power) : Monster(health, power) {}
 };
 
-HealthPoints addUpHealth(std::vector<std::shared_ptr<Monster>> &monsters) {
-    HealthPoints sum = 0;
-    for (auto monster : monsters) {
-        sum += monster->getHealth();
-    }
-    return sum;
-}
-
-AttackPower addUpPower(std::vector<std::shared_ptr<Monster>> &monsters) {
-    AttackPower sum = 0;
-    for (auto monster : monsters) {
-        sum += monster->getAttackPower();
-    }
-    return sum;
-}
 
 class GroupOfMonsters : public Monster {
 private:
     std::vector<std::shared_ptr<Monster>> monsters_;
     
+    static HealthPoints addUpHealth(
+            std::vector<std::shared_ptr<Monster>> const &monsters) {
+        HealthPoints sum = 0;
+        for (auto monster : monsters) {
+            sum += monster->getHealth();
+        }
+        return sum;
+    }
+
+    static HealthPoints addUpHealth(
+            std::initializer_list<std::shared_ptr<Monster>> const &monsters) {
+        HealthPoints sum = 0;
+        for (auto monster : monsters) {
+            sum += monster->getHealth();
+        }
+        return sum;
+    }
+
+    static AttackPower addUpPower(
+            std::vector<std::shared_ptr<Monster>> &monsters) {
+        AttackPower sum = 0;
+        for (auto monster : monsters) {
+            sum += monster->getAttackPower();
+        }
+        return sum;
+    }
+
+    static AttackPower addUpPower(
+            std::initializer_list<std::shared_ptr<Monster>> const &monsters) {
+        AttackPower sum = 0;
+        for (auto monster : monsters) {
+            sum += monster->getAttackPower();
+        }
+        return sum;
+    }
 public:
-    GroupOfMonsters(std::vector<std::shared_ptr<Monster>> monsters) 
+    GroupOfMonsters(std::vector<std::shared_ptr<Monster>> monsters)
+        : Monster(addUpHealth(monsters), addUpPower(monsters)), monsters_(monsters) {}
+
+    GroupOfMonsters(std::initializer_list<std::shared_ptr<Monster>> monsters)
         : Monster(addUpHealth(monsters), addUpPower(monsters)), monsters_(monsters) {}
     
     void takeDamage(AttackPower damage) {
