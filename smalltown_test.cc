@@ -240,23 +240,77 @@ void testSmallTownCitizensWon() {
     .monster(monster)
     .startTime(13U)
     .maxTime(27U)
+    .citizen(createAdult(1U, 21U))
     .citizen(createSheriff(2U, 21U, 90U))
     .citizen(createAdult(1U, 21U))
     .build();
     
     smallTown.tick(3U);
     auto status = smallTown.getStatus();
-    checkEqual(status.getAliveCitizens(), 1U,
+    checkEqual(status.getAliveCitizens(), 2U,
                "Sheriff alive.");
     checkEqual(status.getMonsterHealth(), 0U,
                "Monster dead.");
     
     smallTown.tick(100U);
     status = smallTown.getStatus();
-    checkEqual(status.getAliveCitizens(), 1U,
+    checkEqual(status.getAliveCitizens(), 2U,
                "Sheriff still alive.");
     checkEqual(status.getMonsterHealth(), 0U,
                "Monster still dead.");
+}
+
+void testSmallTownOrderOfAttacking() {
+    beginTest();
+    
+    auto monster = createMummy(90U, 1U);
+    
+    auto smallTown = SmallTown::Builder()
+    .monster(monster)
+    .startTime(13U)
+    .maxTime(27U)
+    .citizen(createAdult(1U, 21U))
+    .citizen(createSheriff(1U, 21U, 90U))
+    .citizen(createAdult(1U, 21U))
+    .build();
+    
+    smallTown.tick(3U);
+    auto status = smallTown.getStatus();
+    checkEqual(status.getAliveCitizens(), 1U,
+               "Monster died before killing everyone.");
+}
+
+void testSmallTownOrderOfAttackingGroup() {
+    beginTest();
+    
+    auto groupOfMonsters = createGroupOfMonsters({
+        createMummy(60U, 1U),
+        createZombie(20U, 1U),
+        createVampire(30U, 1U)
+    });
+    
+    auto smallTown = SmallTown::Builder()
+    .monster(groupOfMonsters)
+    .startTime(3U)
+    .maxTime(27U)
+    .citizen(createAdult(1U, 21U))
+    .citizen(createSheriff(4U, 99U, 30U))
+    .citizen(createAdult(2U, 21U))
+    .build();
+    
+    smallTown.tick(3U);
+    auto status = smallTown.getStatus();
+    checkEqual(status.getAliveCitizens(), 2U,
+               "Group of monsters killed a person.");
+    checkEqual(status.getMonsterHealth(), 30U,
+               "2 of the monsters died.");
+    
+    smallTown.tick(3U);
+    status = smallTown.getStatus();
+    checkEqual(status.getAliveCitizens(), 1U,
+               "One person survived thanks to Sheriff.");
+    checkEqual(status.getMonsterHealth(), 0U,
+               "Last monster died.");
 }
 
 int main() {
@@ -267,4 +321,6 @@ int main() {
     testSmallTownDefaultStrategy();
     testSmallTownDraw();
     testSmallTownCitizensWon();
+    testSmallTownOrderOfAttacking();
+    testSmallTownOrderOfAttackingGroup();
 }

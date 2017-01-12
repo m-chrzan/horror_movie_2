@@ -141,7 +141,7 @@ void testGroupOfMonstersTakeDamage() {
     checkEqual(group1.getAttackPower(), 3U, "Another monster died.");
 
     group1.takeDamage(10U);
-    checkEqual(group1.getHealth(), 0U, "Rest of monster's killed.");
+    checkEqual(group1.getHealth(), 0U, "Rest of monsters killed.");
     checkEqual(group1.getAttackPower(), 0U, "Attack power reduced to 0.");
 }
 

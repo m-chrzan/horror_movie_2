@@ -67,7 +67,7 @@ private:
 
     void doAttack_() {
         for (auto citizen : citizens_) {
-            if (citizen->getHealth() > 0) {
+            if (citizen->getHealth() > 0 && monster_->getHealth() > 0) {
                 fight_(*monster_, *citizen);
 
                 if (citizen->getHealth() == 0) {
