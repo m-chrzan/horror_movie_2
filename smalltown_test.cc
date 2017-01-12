@@ -57,6 +57,52 @@ void TestSmalltown2() {
     checkEqual(status.getAliveCitizens(), 1, "A citizen died.");
 }
 
+void testSmallTownIncorrectBuilder() {
+    beginTest();
+
+    SmallTown::Builder empty;
+
+    checkExceptionThrown<std::logic_error>([&empty] {
+        auto smallTown = empty.build();
+    }, "Can't build unitialized smalltown.");
+
+    SmallTown::Builder noMonster;
+    SmallTown::Builder noCitizen;
+    SmallTown::Builder noStartTime;
+    SmallTown::Builder noMaxTime;
+
+    auto zombie = createZombie(13, 23);
+    auto teen = createTeenager(23, 13);
+    Time start = 0;
+    Time max = 7;
+
+    noMonster.citizen(teen).maxTime(max).startTime(start);
+    noCitizen.maxTime(max).monster(zombie).startTime(start);
+    noStartTime.citizen(teen).maxTime(max).monster(zombie);
+    noMaxTime.citizen(teen).monster(zombie).startTime(start);
+
+    checkExceptionThrown<std::logic_error>([&noMonster] {
+        auto smallTown = noMonster.build();
+    }, "Can't build a town without a monster.");
+
+    checkExceptionThrown<std::logic_error>([&noCitizen] {
+        auto smallTown = noCitizen.build();
+    }, "Can't build a town without a citizen.");
+
+    checkExceptionThrown<std::logic_error>([&noStartTime] {
+        auto smallTown = noStartTime.build();
+    }, "Can't build a town without a start time.");
+
+    checkExceptionThrown<std::logic_error>([&noMaxTime] {
+        auto smallTown = noMaxTime.build();
+    }, "Can't build a town without an max time.");
+
+    SmallTown::Builder startGreaterThanMax;
+
+    startGreaterThanMax.citizen(teen).maxTime(10).monster(zombie).startTime(12);
+
+}
+
 void TestSmalltownBuilder() {
     beginTest();
 
@@ -213,6 +259,7 @@ void TestSmalltownCitizensWon() {
 int main() {
     TestSmalltown();
     TestSmalltown2();
+    testSmallTownIncorrectBuilder();
     TestSmalltownBuilder();
     TestSmalltownDefaultStrategy();
     TestSmalltownDraw();

@@ -107,6 +107,8 @@ private:
     std::vector<std::shared_ptr<Citizen>> citizens_;
     std::set<std::shared_ptr<Citizen>> citizensSet_;
     std::shared_ptr<Monster> monster_;
+    bool startTimeSet_;
+    bool maxTimeSet_;
     Time startTime_;
     Time maxTime_;
     std::shared_ptr<Strategy> strategy_;
@@ -120,13 +122,22 @@ private:
             throw std::logic_error("SmallTown needs at least one citizen.");
         }
 
+        if (!startTimeSet_) {
+            throw std::logic_error("SmallTown needs a start time.");
+        }
+
+        if (!maxTimeSet_) {
+            throw std::logic_error("SmallTown needs a max time.");
+        }
+
         if (startTime_ > maxTime_) {
             throw std::logic_error("Start time can't be larger than max time.");
         }
     }
 
 public:
-    SmallTownBuilder() : strategy_(std::make_shared<DefaultStrategy>()) {}
+    SmallTownBuilder() : startTimeSet_(false), maxTimeSet_(false),
+            strategy_(std::make_shared<DefaultStrategy>()) {}
     SmallTownBuilder & citizen(std::shared_ptr<Citizen> citizen) {
         if (citizensSet_.find(citizen) == citizensSet_.end()) {
             citizensSet_.insert(citizen);
@@ -150,12 +161,14 @@ public:
 
     SmallTownBuilder & startTime(Time startTime) {
         startTime_ = startTime;
+        startTimeSet_ = true;
 
         return *this;
     }
 
     SmallTownBuilder & maxTime(Time maxTime) {
         maxTime_ = maxTime;
+        maxTimeSet_ = true;
 
         return *this;
     }
