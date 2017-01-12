@@ -9,7 +9,7 @@
 
 class Monster : public Character, public Attacker {
 protected:
-    Monster(HealthPoints health, AttackPower power) : 
+    Monster(HealthPoints health, AttackPower power) :
         Character(health), Attacker(power) {}
 
 public:
