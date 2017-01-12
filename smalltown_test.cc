@@ -22,10 +22,11 @@ void TestSmalltown() {
     smallTown.tick(3);
     
     auto status = smallTown.getStatus();
-    assert(status.getMonsterName() == "GroupOfMonsters");
-    assert(status.getMonsterHealth() == 80);
-    assert(status.getAliveCitizens() == 3);
-    checkEqual(1, 1, "Status OK");
+    checkEqual<std::string>(status.getMonsterName(), "GroupOfMonsters",
+            "Got the correct monster health.");
+    checkEqual(status.getMonsterHealth(), 80.0, "Got the correct monster health.");
+    checkEqual(status.getAliveCitizens(), 3,
+            "Got the right number of alive citizens.");
 }
 
 void TestSmalltown2() {
@@ -36,7 +37,7 @@ void TestSmalltown2() {
         createZombie(20, 1),
         createVampire(30, 1)
     });
-    
+
     auto smallTown = SmallTown(3, 40, groupOfMonsters,
         std::vector<std::shared_ptr<Citizen>>{
         createSheriff(100, 35, 30),
@@ -45,23 +46,26 @@ void TestSmalltown2() {
     
     smallTown.tick(3);
     auto status = smallTown.getStatus();
-    assert(status.getMonsterName() == "GroupOfMonsters");
-    assert(status.getMonsterHealth() == 60);
-    assert(status.getAliveCitizens() == 2);
+    checkEqual<std::string>(status.getMonsterName(), "GroupOfMonsters",
+            "Got the correct monster name.");
+    checkEqual(status.getMonsterHealth(), 60.0, "Got the correct monster health.");
+    checkEqual(status.getAliveCitizens(), 2,
+            "Got the right number of alive citizens.");
     
     smallTown.tick(3);
     status = smallTown.getStatus();
-    assert(status.getAliveCitizens() == 1);
-    
-    checkEqual(1, 1, "Status OK");
+    checkEqual(status.getAliveCitizens(), 1, "A citizen died.");
 }
 
 void TestSmalltownBuilder() {
+    beginTest();
+
     auto groupOfMonsters = createGroupOfMonsters({
         createMummy(90, 1),
         createZombie(20, 1),
         createVampire(30, 1)
     });
+
     auto smallTown = SmallTown::Builder()
         .monster(groupOfMonsters)
         .startTime(3)
@@ -75,9 +79,10 @@ void TestSmalltownBuilder() {
     smallTown.tick(3);
     
     auto status = smallTown.getStatus();
-    assert(status.getMonsterName() == "GroupOfMonsters");
-    assert(status.getMonsterHealth() == 80);
-    assert(status.getAliveCitizens() == 3);
+    checkEqual<std::string>(status.getMonsterName(), "GroupOfMonsters",
+            "Monster set correclty.");
+    checkEqual(status.getMonsterHealth(), 80.0, "Got the correct monster health.");
+    checkEqual(status.getAliveCitizens(),  3, "All citizens still alive.");
 }
 
 int main() {
