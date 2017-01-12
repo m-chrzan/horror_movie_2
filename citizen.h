@@ -1,8 +1,9 @@
 #ifndef CITIZEN_H
 #define CITIZEN_H
 
-#include <memory>
 #include <cassert>
+#include <memory>
+
 #include "helper.h"
 
 class Citizen : public Character {
@@ -51,8 +52,7 @@ std::shared_ptr<Adult> createAdult(HealthPoints health, Age age) {
     return std::make_shared<Adult>(health, age);
 }
 
-std::shared_ptr<Sheriff> createSheriff(HealthPoints health, Age age, 
-                                       AttackPower power) {
+std::shared_ptr<Sheriff> createSheriff(HealthPoints health, Age age, AttackPower power) {
     return std::make_shared<Sheriff>(health, age, power);
 }
 
