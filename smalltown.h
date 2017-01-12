@@ -82,9 +82,9 @@ public:
                     if (citizen->getHealth() == 0) {
                         aliveCitizens_--;
                     }
-                    auto possibleSheriff = dynamic_cast<Sheriff*>(citizen.get());
-                    if (possibleSheriff != nullptr) {
-                        monster_->takeDamage(possibleSheriff->getAttackPower());
+                    auto possibleAttacker = dynamic_cast<Attacker*>(citizen.get());
+                    if (possibleAttacker != nullptr) {
+                        monster_->takeDamage(possibleAttacker->getAttackPower());
                     }
                 }
             }
