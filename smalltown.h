@@ -3,6 +3,7 @@
 
 #include <set>
 #include <vector>
+#include <iostream>
 
 #include "helper.h"
 #include "citizen.h"
@@ -87,6 +88,15 @@ public:
                     }
                 }
             }
+        }
+        if (monster_->getHealth() == 0) {
+            if (aliveCitizens_ > 0) {
+                std::cout << "CITIZENS WON\n";
+            } else {
+                std::cout << "DRAW\n";
+            }
+        } else if (aliveCitizens_ == 0) {
+            std::cout << "MONSTER WON\n";
         }
         currentTime_ = (currentTime_ + timeStep) % (maxTime_ + 1);
     }

@@ -93,8 +93,128 @@ void TestSmalltownBuilder() {
     checkEqual(status.getAliveCitizens(),  3, "All citizens still alive.");
 }
 
+void TestSmalltownDefaultStrategy() {
+    beginTest();
+    
+    auto monster = createMummy(90, 1);
+    
+    auto smallTown = SmallTown::Builder()
+        .monster(monster)
+        .startTime(0)
+        .maxTime(27)
+        .citizen(createAdult(1, 21))
+        .citizen(createAdult(2, 21))
+        .citizen(createAdult(3, 21))
+        .citizen(createAdult(4, 21))
+        .citizen(createAdult(5, 21))
+        .build();
+        
+    auto status = smallTown.getStatus();
+    checkEqual(status.getAliveCitizens(), 5,
+               "Got the correct number of alive citizens.");
+    
+    smallTown.tick(3); //0->3 no attack
+    status = smallTown.getStatus();
+    checkEqual(status.getAliveCitizens(), 5,
+               "Got the correct number of alive citizens.");
+    
+    smallTown.tick(10); //3->13 attack
+    status = smallTown.getStatus();
+    checkEqual(status.getAliveCitizens(), 4,
+               "Got the correct number of alive citizens.");
+    
+    smallTown.tick(8); //13->21 attack
+    status = smallTown.getStatus();
+    checkEqual(status.getAliveCitizens(), 3,
+               "Got the correct number of alive citizens.");
+    
+    smallTown.tick(6); //21-27 no attack
+    status = smallTown.getStatus();
+    checkEqual(status.getAliveCitizens(), 3,
+               "Got the correct number of alive citizens.");
+    
+    smallTown.tick(1); //27->0 attack
+    status = smallTown.getStatus();
+    checkEqual(status.getAliveCitizens(), 2,
+               "Got the correct number of alive citizens.");
+    
+    smallTown.tick(26); //0->26 no attack
+    status = smallTown.getStatus();
+    checkEqual(status.getAliveCitizens(), 2,
+               "Got the correct number of alive citizens.");
+    
+    smallTown.tick(1); //26->27 attack
+    status = smallTown.getStatus();
+    checkEqual(status.getAliveCitizens(), 1,
+               "Got the correct number of alive citizens.");
+    
+    smallTown.tick(1); //27->0 attack
+    status = smallTown.getStatus();
+    checkEqual(status.getAliveCitizens(), 0,
+               "All citizens dead.");
+
+}
+
+void TestSmalltownDraw() {
+    beginTest();
+    
+    auto monster = createMummy(90, 1);
+    
+    auto smallTown = SmallTown::Builder()
+    .monster(monster)
+    .startTime(13)
+    .maxTime(27)
+    .citizen(createSheriff(1, 21, 90))
+    .build();
+    
+    smallTown.tick(1);
+    auto status = smallTown.getStatus();
+    checkEqual(status.getAliveCitizens(), 0,
+               "All citizens dead.");
+    checkEqual(status.getMonsterHealth(), 0.0, 
+               "Monster dead.");
+    
+    smallTown.tick(100);
+    status = smallTown.getStatus();
+    checkEqual(status.getAliveCitizens(), 0,
+               "All citizens dead.");
+    checkEqual(status.getMonsterHealth(), 0.0, 
+               "Monster dead.");
+}
+
+void TestSmalltownCitizensWon() {
+    beginTest();
+    
+    auto monster = createMummy(90, 1);
+    
+    auto smallTown = SmallTown::Builder()
+    .monster(monster)
+    .startTime(13)
+    .maxTime(27)
+    .citizen(createSheriff(2, 21, 90))
+    .citizen(createAdult(1, 21))
+    .build();
+    
+    smallTown.tick(3);
+    auto status = smallTown.getStatus();
+    checkEqual(status.getAliveCitizens(), 1,
+               "Sheriff alive.");
+    checkEqual(status.getMonsterHealth(), 0.0, 
+               "Monster dead.");
+    
+    smallTown.tick(100);
+    status = smallTown.getStatus();
+    checkEqual(status.getAliveCitizens(), 1,
+               "Sheriff still alive.");
+    checkEqual(status.getMonsterHealth(), 0.0, 
+               "Monster still dead.");
+}
+
 int main() {
     TestSmalltown();
     TestSmalltown2();
     TestSmalltownBuilder();
+    TestSmalltownDefaultStrategy();
+    TestSmalltownDraw();
+    TestSmalltownCitizensWon();
 }
