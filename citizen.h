@@ -41,7 +41,7 @@ public:
 class Sheriff : public Adult, public Attacker {
 public:
     Sheriff(HealthPoints health, Age age, AttackPower power) :
-            Adult(health, age), Attacker(power) {}
+        Adult(health, age), Attacker(power) {}
 };
 
 std::shared_ptr<Teenager> createTeenager(HealthPoints health, Age age) {

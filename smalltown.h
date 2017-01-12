@@ -182,8 +182,9 @@ private:
     }
 
 public:
-    SmallTownBuilder() : startTimeSet_(false), maxTimeSet_(false),
-            strategy_(std::make_shared<DefaultStrategy>()) {}
+    SmallTownBuilder() : startTimeSet_(false),
+                         maxTimeSet_(false),
+                         strategy_(std::make_shared<DefaultStrategy>()) {}
 
     SmallTownBuilder &citizen(std::shared_ptr<Citizen> citizen) {
         if (citizensSet_.find(citizen) == citizensSet_.end()) {
