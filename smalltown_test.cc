@@ -112,11 +112,14 @@ void testSmallTownBuilder() {
         createVampire(30, 1)
     });
 
+    auto sheriff = createSheriff(100, 35, 20);
+
     auto smallTown = SmallTown::Builder()
         .monster(groupOfMonsters)
         .startTime(3)
         .maxTime(27)
-        .citizen(createSheriff(100, 35, 20))
+        .citizen(sheriff)
+        .citizen(sheriff) // second instance of same sheriff should be ignored
         .citizen(createAdult(100, 21))
         .citizen(createTeenager(50, 14))
         .build();
