@@ -4,6 +4,7 @@
 #include <set>
 #include <vector>
 
+#include "helper.h"
 #include "citizen.h"
 #include "monster.h"
 
@@ -25,6 +26,29 @@ public:
     }
 };
 
+class Status {
+private:
+    std::string monsterName_;
+    HealthPoints monsterHealth_;
+    int aliveCitizens_;
+
+public:
+    Status(std::string const &name, HealthPoints health, int aliveCits) :
+        monsterName_(name), monsterHealth_(health), aliveCitizens_(aliveCits) {}
+
+    std::string getMonsterName() const {
+        return monsterName_;
+    }
+
+    HealthPoints getMonsterHealth() const {
+        return monsterHealth_;
+    }
+
+    int getAliveCitizens() const {
+        return aliveCitizens_;
+    }
+};
+
 class SmallTownBuilder;
 
 class SmallTown {
@@ -34,7 +58,7 @@ private:
 
     std::shared_ptr<Monster> monster_;
     std::vector<std::shared_ptr<Citizen>> citizens_;
-
+    int aliveCitizens_ = 0;
     std::shared_ptr<Strategy> strategy_;
 
 public:
@@ -43,7 +67,29 @@ public:
               std::vector<std::shared_ptr<Citizen>> citizens,
               std::shared_ptr<Strategy> strategy) :
         currentTime_(startTime), maxTime_(maxTime), monster_(monster),
-        citizens_(citizens), strategy_(strategy) {}
+        citizens_(citizens), aliveCitizens_(citizens.size()), strategy_(strategy) {}
+
+    Status getStatus() const {
+        return Status(monster_->getName(), monster_->getHealth(), aliveCitizens_);
+    }
+
+    void tick(Time timeStep) {
+        if (strategy_->isAttackTime(currentTime_)) {
+            for (auto citizen : citizens_) {
+                if (citizen->getHealth() > 0) {
+                    citizen->takeDamage(monster_->getAttackPower());
+                    if (citizen->getHealth() == 0) {
+                        aliveCitizens_--;
+                    }
+                    auto possibleSheriff = dynamic_cast<Sheriff*>(citizen.get());
+                    if (possibleSheriff != nullptr) {
+                        monster_->takeDamage(possibleSheriff->getAttackPower());
+                    }
+                }
+            }
+        }
+        currentTime_ = (currentTime_ + timeStep) % (maxTime_ + 1);
+    }
 };
 
 class SmallTownBuilder {
@@ -72,7 +118,7 @@ private:
 public:
     SmallTownBuilder() : strategy_(std::make_shared<DefaultStrategy>()) {}
     SmallTownBuilder & citizen(std::shared_ptr<Citizen> citizen) {
-        if (citizensSet_.find(citizen) != citizensSet_.end()) {
+        if (citizensSet_.find(citizen) == citizensSet_.end()) {
             citizensSet_.insert(citizen);
             citizens_.push_back(citizen);
         }
