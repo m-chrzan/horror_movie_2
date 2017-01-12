@@ -84,6 +84,39 @@ private:
         victim.takeDamage(attacker.getAttackPower());
     }
 
+    enum State { CITIZENS_WON, MONSTER_WON, DRAW, ONGOING };
+
+    void checkWinConditions_() {
+        switch (getState_()) {
+            case DRAW:
+                std::cout << "DRAW" << std::endl;
+                break;
+            case CITIZENS_WON:
+                std::cout << "CITIZENS WON" << std::endl;
+                break;
+            case MONSTER_WON:
+                std::cout << "MONSTER WON" << std::endl;
+                break;
+            case ONGOING:
+                break;
+        }
+    }
+
+    State getState_() {
+        bool monsterDead = monster_->getHealth() == 0;
+        bool citizensDead = aliveCitizens_ == 0;
+
+        if (monsterDead && citizensDead) {
+            return State::DRAW;
+        } else if (monsterDead) {
+            return State::CITIZENS_WON;
+        } else if (citizensDead) {
+            return State::MONSTER_WON;
+        } else {
+            return State::ONGOING;
+        }
+    }
+
 public:
     using Builder = SmallTownBuilder;
     SmallTown(Time startTime, Time maxTime, std::shared_ptr<Monster> monster,
@@ -100,15 +133,9 @@ public:
         if (strategy_->isAttackTime(currentTime_)) {
             doAttack_();
         }
-        if (monster_->getHealth() == 0) {
-            if (aliveCitizens_ > 0) {
-                std::cout << "CITIZENS WON\n";
-            } else {
-                std::cout << "DRAW\n";
-            }
-        } else if (aliveCitizens_ == 0) {
-            std::cout << "MONSTER WON\n";
-        }
+
+        checkWinConditions_();
+
         currentTime_ = (currentTime_ + timeStep) % (maxTime_ + 1);
     }
 };
