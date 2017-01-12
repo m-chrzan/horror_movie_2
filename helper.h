@@ -3,9 +3,9 @@
 
 #include <cassert>
 
-using HealthPoints = double;
-using Age = double;
-using AttackPower = double;
+using HealthPoints = unsigned;
+using Age = unsigned;
+using AttackPower = unsigned;
 
 class Character {
 protected:

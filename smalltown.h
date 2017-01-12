@@ -32,7 +32,7 @@ class Status {
 private:
     std::string monsterName_;
     HealthPoints monsterHealth_;
-    int aliveCitizens_;
+    unsigned aliveCitizens_;
 
 public:
     Status(std::string const &name, HealthPoints health, int aliveCitizens) :
@@ -48,7 +48,7 @@ public:
         return monsterHealth_;
     }
 
-    int getAliveCitizens() const {
+    unsigned getAliveCitizens() const {
         return aliveCitizens_;
     }
 };
@@ -62,7 +62,7 @@ private:
 
     std::shared_ptr<Monster> monster_;
     std::vector<std::shared_ptr<Citizen>> citizens_;
-    int aliveCitizens_ = 0;
+    unsigned aliveCitizens_ = 0;
     std::shared_ptr<Strategy> strategy_;
 
     void doAttack_() {

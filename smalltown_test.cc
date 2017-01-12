@@ -7,25 +7,25 @@ void testSmallTown() {
     beginTest();
 
     auto groupOfMonsters = createGroupOfMonsters({
-        createMummy(90, 1),
-        createZombie(20, 1),
-        createVampire(30, 1)
+        createMummy(90U, 1U),
+        createZombie(20U, 1U),
+        createVampire(30U, 1U)
     });
-    auto smallTown = SmallTown(3, 27, groupOfMonsters,
+    auto smallTown = SmallTown(3U, 27U, groupOfMonsters,
         std::vector<std::shared_ptr<Citizen>>{
-        createSheriff(100, 35, 20),
-        createAdult(100, 21),
-        createTeenager(50, 14)}, std::make_shared<DefaultStrategy>());
-    smallTown.tick(1);
+        createSheriff(100U, 35U, 20U),
+        createAdult(100U, 21U),
+        createTeenager(50U, 14U)}, std::make_shared<DefaultStrategy>());
+    smallTown.tick(1U);
 
-    smallTown.tick(18);
-    smallTown.tick(3);
+    smallTown.tick(18U);
+    smallTown.tick(3U);
 
     auto status = smallTown.getStatus();
     checkEqual<std::string>(status.getMonsterName(), "GroupOfMonsters",
             "Got the correct monster health.");
-    checkEqual(status.getMonsterHealth(), 80.0, "Got the correct monster health.");
-    checkEqual(status.getAliveCitizens(), 3,
+    checkEqual(status.getMonsterHealth(), 80U, "Got the correct monster health.");
+    checkEqual(status.getAliveCitizens(), 3U,
             "Got the right number of alive citizens.");
 }
 
@@ -33,28 +33,28 @@ void testSmallTown2() {
     beginTest();
 
     auto groupOfMonsters = createGroupOfMonsters({
-        createMummy(90, 40),
-        createZombie(20, 1),
-        createVampire(30, 1)
+        createMummy(90U, 40U),
+        createZombie(20U, 1U),
+        createVampire(30U, 1U)
     });
 
-    auto smallTown = SmallTown(3, 40, groupOfMonsters,
+    auto smallTown = SmallTown(3U, 40U, groupOfMonsters,
         std::vector<std::shared_ptr<Citizen>>{
-        createSheriff(100, 35, 30),
-        createAdult(80, 21),
-        createTeenager(40, 14)}, std::make_shared<DefaultStrategy>());
+        createSheriff(100U, 35U, 30U),
+        createAdult(80U, 21U),
+        createTeenager(40U, 14U)}, std::make_shared<DefaultStrategy>());
 
-    smallTown.tick(3);
+    smallTown.tick(3U);
     auto status = smallTown.getStatus();
     checkEqual<std::string>(status.getMonsterName(), "GroupOfMonsters",
             "Got the correct monster name.");
-    checkEqual(status.getMonsterHealth(), 60.0, "Got the correct monster health.");
-    checkEqual(status.getAliveCitizens(), 2,
+    checkEqual(status.getMonsterHealth(), 60U, "Got the correct monster health.");
+    checkEqual(status.getAliveCitizens(), 2U,
             "Got the right number of alive citizens.");
 
-    smallTown.tick(3);
+    smallTown.tick(3U);
     status = smallTown.getStatus();
-    checkEqual(status.getAliveCitizens(), 1, "A citizen died.");
+    checkEqual(status.getAliveCitizens(), 1U, "A citizen died.");
 }
 
 void testSmallTownIncorrectBuilder() {
@@ -71,10 +71,10 @@ void testSmallTownIncorrectBuilder() {
     SmallTown::Builder noStartTime;
     SmallTown::Builder noMaxTime;
 
-    auto zombie = createZombie(13, 23);
-    auto teen = createTeenager(23, 13);
-    Time start = 0;
-    Time max = 7;
+    auto zombie = createZombie(13U, 23U);
+    auto teen = createTeenager(23U, 13U);
+    Time start = 0U;
+    Time max = 7U;
 
     noMonster.citizen(teen).maxTime(max).startTime(start);
     noCitizen.maxTime(max).monster(zombie).startTime(start);
@@ -99,7 +99,7 @@ void testSmallTownIncorrectBuilder() {
 
     SmallTown::Builder startGreaterThanMax;
 
-    startGreaterThanMax.citizen(teen).maxTime(10).monster(zombie).startTime(12);
+    startGreaterThanMax.citizen(teen).maxTime(10U).monster(zombie).startTime(12U);
 
 }
 
@@ -107,99 +107,99 @@ void testSmallTownBuilder() {
     beginTest();
 
     auto groupOfMonsters = createGroupOfMonsters({
-        createMummy(90, 1),
-        createZombie(20, 1),
-        createVampire(30, 1)
+        createMummy(90U, 1U),
+        createZombie(20U, 1U),
+        createVampire(30U, 1U)
     });
 
-    auto sheriff = createSheriff(100, 35, 20);
+    auto sheriff = createSheriff(100U, 35U, 20U);
 
     auto smallTown = SmallTown::Builder()
         .monster(groupOfMonsters)
-        .startTime(3)
-        .maxTime(27)
+        .startTime(3U)
+        .maxTime(27U)
         .citizen(sheriff)
         .citizen(sheriff) // second instance of same sheriff should be ignored
-        .citizen(createAdult(100, 21))
-        .citizen(createTeenager(50, 14))
+        .citizen(createAdult(100U, 21U))
+        .citizen(createTeenager(50U, 14U))
         .build();
 
     auto status = smallTown.getStatus();
 
     checkEqual<std::string>(status.getMonsterName(), "GroupOfMonsters",
             "Monster set correclty.");
-    checkEqual(status.getMonsterHealth(), 140.0,
+    checkEqual(status.getMonsterHealth(), 140U,
             "Got the correct monster health.");
-    checkEqual(status.getAliveCitizens(), 3,
+    checkEqual(status.getAliveCitizens(), 3U,
             "Got the correct number of alive citizens.");
 
-    smallTown.tick(18);
-    smallTown.tick(3);
+    smallTown.tick(18U);
+    smallTown.tick(3U);
 
     status = smallTown.getStatus();
-    checkEqual(status.getMonsterHealth(), 80.0,
+    checkEqual(status.getMonsterHealth(), 80U,
             "Got the correct monster health.");
-    checkEqual(status.getAliveCitizens(),  3, "All citizens still alive.");
+    checkEqual(status.getAliveCitizens(),  3U, "All citizens still alive.");
 }
 
 void testSmallTownDefaultStrategy() {
     beginTest();
     
-    auto monster = createMummy(90, 1);
+    auto monster = createMummy(90U, 1U);
     
     auto smallTown = SmallTown::Builder()
         .monster(monster)
-        .startTime(0)
-        .maxTime(27)
-        .citizen(createAdult(1, 21))
-        .citizen(createAdult(2, 21))
-        .citizen(createAdult(3, 21))
-        .citizen(createAdult(4, 21))
-        .citizen(createAdult(5, 21))
+        .startTime(0U)
+        .maxTime(27U)
+        .citizen(createAdult(1U, 21U))
+        .citizen(createAdult(2U, 21U))
+        .citizen(createAdult(3U, 21U))
+        .citizen(createAdult(4U, 21U))
+        .citizen(createAdult(5U, 21U))
         .build();
         
     auto status = smallTown.getStatus();
-    checkEqual(status.getAliveCitizens(), 5,
+    checkEqual(status.getAliveCitizens(), 5U,
                "Got the correct number of alive citizens.");
     
-    smallTown.tick(3); //0->3 no attack
+    smallTown.tick(3U); //0U->3U no attack
     status = smallTown.getStatus();
-    checkEqual(status.getAliveCitizens(), 5,
+    checkEqual(status.getAliveCitizens(), 5U,
                "Got the correct number of alive citizens.");
     
-    smallTown.tick(10); //3->13 attack
+    smallTown.tick(10U); //3U->13U attack
     status = smallTown.getStatus();
-    checkEqual(status.getAliveCitizens(), 4,
+    checkEqual(status.getAliveCitizens(), 4U,
                "Got the correct number of alive citizens.");
     
-    smallTown.tick(8); //13->21 attack
+    smallTown.tick(8U); //13U->21U attack
     status = smallTown.getStatus();
-    checkEqual(status.getAliveCitizens(), 3,
+    checkEqual(status.getAliveCitizens(), 3U,
                "Got the correct number of alive citizens.");
     
-    smallTown.tick(6); //21-27 no attack
+    smallTown.tick(6U); //21U-27U no attack
     status = smallTown.getStatus();
-    checkEqual(status.getAliveCitizens(), 3,
+    checkEqual(status.getAliveCitizens(), 3U,
                "Got the correct number of alive citizens.");
     
-    smallTown.tick(1); //27->0 attack
+    smallTown.tick(1U); //27U->0U attack
     status = smallTown.getStatus();
-    checkEqual(status.getAliveCitizens(), 2,
+    checkEqual(status.getAliveCitizens(), 2U,
                "Got the correct number of alive citizens.");
     
-    smallTown.tick(26); //0->26 no attack
+    smallTown.tick(26U); //0U->26U no attack
     status = smallTown.getStatus();
-    checkEqual(status.getAliveCitizens(), 2,
+    checkEqual(status.getAliveCitizens(), 2U,
                "Got the correct number of alive citizens.");
     
-    smallTown.tick(1); //26->27 attack
+    smallTown.tick(1U); //26U->27U attack
     status = smallTown.getStatus();
-    checkEqual(status.getAliveCitizens(), 1,
+    checkEqual(status.getAliveCitizens(), 1U,
                "Got the correct number of alive citizens.");
     
-    smallTown.tick(1); //27->0 attack
+    smallTown.tick(1U); //27U->0U attack
     status = smallTown.getStatus();
-    checkEqual(status.getAliveCitizens(), 0,
+    checkEqual(status.getAliveCitizens(), 0U,
                "All citizens dead.");
 
 }
@@ -207,55 +207,55 @@ void testSmallTownDefaultStrategy() {
 void testSmallTownDraw() {
     beginTest();
     
-    auto monster = createMummy(90, 1);
+    auto monster = createMummy(90U, 1U);
     
     auto smallTown = SmallTown::Builder()
     .monster(monster)
-    .startTime(13)
-    .maxTime(27)
-    .citizen(createSheriff(1, 21, 90))
+    .startTime(13U)
+    .maxTime(27U)
+    .citizen(createSheriff(1U, 21U, 90U))
     .build();
     
-    smallTown.tick(1);
+    smallTown.tick(1U);
     auto status = smallTown.getStatus();
-    checkEqual(status.getAliveCitizens(), 0,
+    checkEqual(status.getAliveCitizens(), 0U,
                "All citizens dead.");
-    checkEqual(status.getMonsterHealth(), 0.0, 
+    checkEqual(status.getMonsterHealth(), 0U,
                "Monster dead.");
     
-    smallTown.tick(100);
+    smallTown.tick(100U);
     status = smallTown.getStatus();
-    checkEqual(status.getAliveCitizens(), 0,
+    checkEqual(status.getAliveCitizens(), 0U,
                "All citizens dead.");
-    checkEqual(status.getMonsterHealth(), 0.0, 
+    checkEqual(status.getMonsterHealth(), 0U,
                "Monster dead.");
 }
 
 void testSmallTownCitizensWon() {
     beginTest();
     
-    auto monster = createMummy(90, 1);
+    auto monster = createMummy(90U, 1U);
     
     auto smallTown = SmallTown::Builder()
     .monster(monster)
-    .startTime(13)
-    .maxTime(27)
-    .citizen(createSheriff(2, 21, 90))
-    .citizen(createAdult(1, 21))
+    .startTime(13U)
+    .maxTime(27U)
+    .citizen(createSheriff(2U, 21U, 90U))
+    .citizen(createAdult(1U, 21U))
     .build();
     
-    smallTown.tick(3);
+    smallTown.tick(3U);
     auto status = smallTown.getStatus();
-    checkEqual(status.getAliveCitizens(), 1,
+    checkEqual(status.getAliveCitizens(), 1U,
                "Sheriff alive.");
-    checkEqual(status.getMonsterHealth(), 0.0, 
+    checkEqual(status.getMonsterHealth(), 0U,
                "Monster dead.");
     
-    smallTown.tick(100);
+    smallTown.tick(100U);
     status = smallTown.getStatus();
-    checkEqual(status.getAliveCitizens(), 1,
+    checkEqual(status.getAliveCitizens(), 1U,
                "Sheriff still alive.");
-    checkEqual(status.getMonsterHealth(), 0.0, 
+    checkEqual(status.getMonsterHealth(), 0U,
                "Monster still dead.");
 }
 
