@@ -4,6 +4,7 @@
 #include <set>
 #include <vector>
 #include <iostream>
+#include <memory>
 
 #include "helper.h"
 #include "citizen.h"
@@ -62,6 +63,27 @@ private:
     int aliveCitizens_ = 0;
     std::shared_ptr<Strategy> strategy_;
 
+    void doAttack_() {
+        for (auto citizen : citizens_) {
+            if (citizen->getHealth() > 0) {
+                fight_(*monster_, *citizen);
+
+                if (citizen->getHealth() == 0) {
+                    aliveCitizens_--;
+                }
+
+                auto possibleAttacker = std::dynamic_pointer_cast<Attacker>(citizen);
+                if (possibleAttacker) {
+                    fight_(*possibleAttacker, *monster_);
+                }
+            }
+        }
+    }
+
+    void fight_(Attacker& attacker, Character& victim) {
+        victim.takeDamage(attacker.getAttackPower());
+    }
+
 public:
     using Builder = SmallTownBuilder;
     SmallTown(Time startTime, Time maxTime, std::shared_ptr<Monster> monster,
@@ -76,18 +98,7 @@ public:
 
     void tick(Time timeStep) {
         if (strategy_->isAttackTime(currentTime_)) {
-            for (auto citizen : citizens_) {
-                if (citizen->getHealth() > 0) {
-                    citizen->takeDamage(monster_->getAttackPower());
-                    if (citizen->getHealth() == 0) {
-                        aliveCitizens_--;
-                    }
-                    auto possibleAttacker = dynamic_cast<Attacker*>(citizen.get());
-                    if (possibleAttacker != nullptr) {
-                        monster_->takeDamage(possibleAttacker->getAttackPower());
-                    }
-                }
-            }
+            doAttack_();
         }
         if (monster_->getHealth() == 0) {
             if (aliveCitizens_ > 0) {
