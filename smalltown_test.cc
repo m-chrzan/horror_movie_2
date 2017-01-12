@@ -3,7 +3,7 @@
 #include "smalltown.h"
 #include "testing.h"
 
-void TestSmalltown() {
+void testSmallTown() {
     beginTest();
 
     auto groupOfMonsters = createGroupOfMonsters({
@@ -29,7 +29,7 @@ void TestSmalltown() {
             "Got the right number of alive citizens.");
 }
 
-void TestSmalltown2() {
+void testSmallTown2() {
     beginTest();
 
     auto groupOfMonsters = createGroupOfMonsters({
@@ -103,7 +103,7 @@ void testSmallTownIncorrectBuilder() {
 
 }
 
-void TestSmalltownBuilder() {
+void testSmallTownBuilder() {
     beginTest();
 
     auto groupOfMonsters = createGroupOfMonsters({
@@ -139,7 +139,7 @@ void TestSmalltownBuilder() {
     checkEqual(status.getAliveCitizens(),  3, "All citizens still alive.");
 }
 
-void TestSmalltownDefaultStrategy() {
+void testSmallTownDefaultStrategy() {
     beginTest();
     
     auto monster = createMummy(90, 1);
@@ -201,7 +201,7 @@ void TestSmalltownDefaultStrategy() {
 
 }
 
-void TestSmalltownDraw() {
+void testSmallTownDraw() {
     beginTest();
     
     auto monster = createMummy(90, 1);
@@ -228,7 +228,7 @@ void TestSmalltownDraw() {
                "Monster dead.");
 }
 
-void TestSmalltownCitizensWon() {
+void testSmallTownCitizensWon() {
     beginTest();
     
     auto monster = createMummy(90, 1);
@@ -257,11 +257,11 @@ void TestSmalltownCitizensWon() {
 }
 
 int main() {
-    TestSmalltown();
-    TestSmalltown2();
+    testSmallTown();
+    testSmallTown2();
     testSmallTownIncorrectBuilder();
-    TestSmalltownBuilder();
-    TestSmalltownDefaultStrategy();
-    TestSmalltownDraw();
-    TestSmalltownCitizensWon();
+    testSmallTownBuilder();
+    testSmallTownDefaultStrategy();
+    testSmallTownDraw();
+    testSmallTownCitizensWon();
 }
