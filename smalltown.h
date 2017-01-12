@@ -1,13 +1,13 @@
 #ifndef SMALLTOWN_H
 #define SMALLTOWN_H
 
-#include <set>
-#include <vector>
 #include <iostream>
 #include <memory>
+#include <set>
+#include <vector>
 
-#include "helper.h"
 #include "citizen.h"
+#include "helper.h"
 #include "monster.h"
 
 using Time = unsigned;
@@ -35,8 +35,10 @@ private:
     int aliveCitizens_;
 
 public:
-    Status(std::string const &name, HealthPoints health, int aliveCits) :
-        monsterName_(name), monsterHealth_(health), aliveCitizens_(aliveCits) {}
+    Status(std::string const &name, HealthPoints health, int aliveCitizens) :
+        monsterName_(name),
+        monsterHealth_(health),
+        aliveCitizens_(aliveCitizens) {}
 
     std::string getMonsterName() const {
         return monsterName_;
@@ -80,13 +82,13 @@ private:
         }
     }
 
-    void fight_(Attacker& attacker, Character& victim) {
+    void fight_(Attacker &attacker, Character &victim) {
         victim.takeDamage(attacker.getAttackPower());
     }
 
     enum State { CITIZENS_WON, MONSTER_WON, DRAW, ONGOING };
 
-    void checkWinConditions_() {
+    void announceState_() const {
         switch (getState_()) {
             case DRAW:
                 std::cout << "DRAW" << std::endl;
@@ -102,7 +104,7 @@ private:
         }
     }
 
-    State getState_() {
+    State getState_() const {
         bool monsterDead = monster_->getHealth() == 0;
         bool citizensDead = aliveCitizens_ == 0;
 
@@ -119,11 +121,17 @@ private:
 
 public:
     using Builder = SmallTownBuilder;
-    SmallTown(Time startTime, Time maxTime, std::shared_ptr<Monster> monster,
+
+    SmallTown(Time startTime, Time maxTime,
+              std::shared_ptr<Monster> monster,
               std::vector<std::shared_ptr<Citizen>> citizens,
               std::shared_ptr<Strategy> strategy) :
-        currentTime_(startTime), maxTime_(maxTime), monster_(monster),
-        citizens_(citizens), aliveCitizens_(citizens.size()), strategy_(strategy) {}
+        currentTime_(startTime),
+        maxTime_(maxTime),
+        monster_(monster),
+        citizens_(citizens),
+        aliveCitizens_(citizens.size()),
+        strategy_(strategy) {}
 
     Status getStatus() const {
         return Status(monster_->getName(), monster_->getHealth(), aliveCitizens_);
@@ -134,7 +142,7 @@ public:
             doAttack_();
         }
 
-        checkWinConditions_();
+        announceState_();
 
         currentTime_ = (currentTime_ + timeStep) % (maxTime_ + 1);
     }
@@ -152,7 +160,7 @@ private:
     std::shared_ptr<Strategy> strategy_;
 
     void checkReadyToBuild_() {
-        if (monster_.get() == nullptr) {
+        if (!monster_) {
             throw std::logic_error("SmallTown needs a monster.");
         }
 
@@ -176,7 +184,8 @@ private:
 public:
     SmallTownBuilder() : startTimeSet_(false), maxTimeSet_(false),
             strategy_(std::make_shared<DefaultStrategy>()) {}
-    SmallTownBuilder & citizen(std::shared_ptr<Citizen> citizen) {
+
+    SmallTownBuilder &citizen(std::shared_ptr<Citizen> citizen) {
         if (citizensSet_.find(citizen) == citizensSet_.end()) {
             citizensSet_.insert(citizen);
             citizens_.push_back(citizen);
@@ -185,26 +194,26 @@ public:
         return *this;
     }
 
-    SmallTownBuilder & monster(std::shared_ptr<Monster> monster) {
+    SmallTownBuilder &monster(std::shared_ptr<Monster> monster) {
         monster_ = monster;
 
         return *this;
     }
 
-    SmallTownBuilder & strategy(std::shared_ptr<Strategy> strategy) {
+    SmallTownBuilder &strategy(std::shared_ptr<Strategy> strategy) {
         strategy_ = strategy;
 
         return *this;
     }
 
-    SmallTownBuilder & startTime(Time startTime) {
+    SmallTownBuilder &startTime(Time startTime) {
         startTime_ = startTime;
         startTimeSet_ = true;
 
         return *this;
     }
 
-    SmallTownBuilder & maxTime(Time maxTime) {
+    SmallTownBuilder &maxTime(Time maxTime) {
         maxTime_ = maxTime;
         maxTimeSet_ = true;
 
